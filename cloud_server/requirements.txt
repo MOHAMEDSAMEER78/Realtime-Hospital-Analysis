@@ -1,0 +1,6 @@
+Django>=4.0
+djangorestframework>=3.13
+channels>=3.0
+channels-redis>=3.4
+celery>=5.0
+redis>=4.0

@@ -1,0 +1,8 @@
+Django>=4.0  # Or your desired Django version
+djangorestframework>=3.13 # Or your desired DRF version
+requests>=2.26.0
+celery>=5.0
+redis>=4.0 # Or your preferred Celery broker
+
+
+# pip install -r requirements.txt
