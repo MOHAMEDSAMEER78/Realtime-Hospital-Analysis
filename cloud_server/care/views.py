@@ -8,42 +8,24 @@ from . import tasks  # Import Celery tasks
 
 @api_view(['POST'])
 def receive_fog_data(request):
+    print("Received data from fog server:", request.data)
     serializer = CloudVitalSignSerializer(data=request.data)
-    print(serializer.is_valid())  # Debugging line
     if serializer.is_valid():
-        print("Received data:", request.data)  # Debugging line
+        print("Valid data received from fog")
         rfid_tag = request.data.get('rfid_tag')
         if rfid_tag:
             try:
                 patient = Patient.objects.get(rfid_tag=rfid_tag)
                 serializer.save(patient=patient)
-                tasks.process_vital_sign_data.delay(serializer.data, patient.id) 
+                tasks.process_vital_sign_data.delay(serializer.data, patient.id)
                 return Response({"message": "Fog data received and saved."}, status=status.HTTP_201_CREATED)
             except Patient.DoesNotExist:
+                print(f"Patient with RFID tag '{rfid_tag}' not found.")
                 return Response({"error": f"Patient with RFID tag '{rfid_tag}' not found."}, status=status.HTTP_400_BAD_REQUEST)
         else:
-            serializer.save() # If no RFID, save without patient (can be updated later)
+            # Save without patient association
+            serializer.save()
             return Response({"message": "Fog data received and saved (no patient association)."}, status=status.HTTP_201_CREATED)
-    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-class VitalSignList(generics.ListAPIView):
-    queryset = CloudVitalSign.objects.all().order_by('-timestamp')
-    serializer_class = CloudVitalSignSerializer
-
-class PatientVitalSignList(generics.ListAPIView):
-    serializer_class = CloudVitalSignSerializer
-
-    def get_queryset(self):
-        patient_id = self.kwargs['patient_id']
-        return CloudVitalSign.objects.filter(patient_id=patient_id).order_by('-timestamp')
-
-class MedicationList(generics.ListCreateAPIView):
-    queryset = Medication.objects.all()
-    serializer_class = MedicationSerializer
-
-class PatientMedicationList(generics.ListAPIView):
-    serializer_class = MedicationSerializer
-
-    def get_queryset(self):
-        patient_id = self.kwargs['patient_id']
-        return Medication.objects.filter(patient_id=patient_id).order_by('-administration_time')
+    else:
+        print("Invalid data received:", serializer.errors)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
