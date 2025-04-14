@@ -1,0 +1,45 @@
+#Create Environment for each layer
+#Cloud Layer
+python3 -m venv cloudenv
+source cloudenv/bin/activate
+cd cloud_server
+pip install -r requirements.txt
+cd ..
+#Fog Layer
+python3 -m venv fogenv
+source fogenv/bin/activate
+cd fog_server
+pip install -r requirements.txt
+cd ..
+#Edge Layer
+python3 -m venv edgeenv
+source edgeenv/bin/activate
+cd edge_device
+pip install -r requirements.txt
+cd ..
+
+
+#Terminal 1 (Cloud Layer)
+source cloudenv/bin/activate
+cd cloud_server
+python3 manage.py runserver 127.0.0.1:8001
+
+
+#Terminal 2 (Fog Layer)
+source fogenv/bin/activate
+cd fog_server
+python3 manage.py runserver 127.0.0.1:8000
+
+
+#Terminal 3
+source fogenv/bin/activate
+cd fog_server
+celery -A fog_server worker --loglevel=info
+
+
+#Terminal 4 (Edge Layer)
+source edgeenv/bin/activate
+cd edge_device
+python edge_device.py
+
+
