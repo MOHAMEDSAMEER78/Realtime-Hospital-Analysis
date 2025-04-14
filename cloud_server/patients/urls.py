@@ -7,4 +7,5 @@ urlpatterns = [
     path('in/', views.get_in_patients, name='in-patients'),
     path('out/', views.get_out_patients, name='out-patients'),
     path('discharge/<str:rfid_tag>/', views.discharge_patient, name='discharge-patient'),
+    path('admit/<str:rfid_tag>/', views.admit_patient, name='admit-patient'),
 ]

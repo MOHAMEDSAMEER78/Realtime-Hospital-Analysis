@@ -45,10 +45,16 @@ def discharge_patient(request, rfid_tag):
     except Patient.DoesNotExist:
         return Response({"error": f"Patient with RFID {rfid_tag} not found."}, status=status.HTTP_404_NOT_FOUND)
 
-
 @api_view(['POST'])
 def admit_patient(request, rfid_tag):
     """
-    
+    Admits a patient by setting their discharge_date to null.
     """
+    try:
+        patient = Patient.objects.get(rfid_tag=rfid_tag)
+        patient.discharge_date = None  # Set discharge date to null
+        patient.save()
+        return Response({"message": f"Patient with RFID {rfid_tag} admitted."}, status=status.HTTP_200_OK)
+    except Patient.DoesNotExist:
+        return Response({"error": f"Patient with RFID {rfid_tag} not found."}, status=status.HTTP_404_NOT_FOUND)
     
