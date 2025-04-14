@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cloud Layer Interface</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Cloud Layer Interface</h1>
+        <div class="api-section">
+            <h2>Care API</h2>
+            <button id="fetchCareData">Fetch Care Data</button>
+            <div id="careData"></div>
+        </div>
+        <div class="api-section">
+            <h2>Patients</h2>
+            <div id="patientDetail" class="patient-detail" style="display: none;">
+                <h3>Patient Details</h3>
+                <div id="detailContent"></div>
+                <button id="closeDetail">Close</button>
+            </div>
+            <div class="patient-lists">
+                <div class="patient-list">
+                    <h3>Currently Admitted Patients</h3>
+                    <button id="fetchAdmittedPatients">Refresh List</button>
+                    <div id="admittedPatients"></div>
+                </div>
+                <div class="patient-list">
+                    <h3>Recently Discharged Patients</h3>
+                    <button id="fetchDischargedPatients">Refresh List</button>
+                    <div id="dischargedPatients"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>

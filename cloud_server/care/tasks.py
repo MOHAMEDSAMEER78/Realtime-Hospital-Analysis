@@ -14,3 +14,6 @@ def process_vital_sign_data(vital_sign_data, patient_id):
     # - Logging data for long-term analysis
     # - Triggering alerts
     print(f"Received vital sign data: {vital_sign_data}")
+    temperature = vital_sign_data.get('temperature')
+    if temperature is not None and temperature > 38:
+        print(f"WARNING: High temperature detected for patient ID: {patient_id}, Temperature: {temperature}")
